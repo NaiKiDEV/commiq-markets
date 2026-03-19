@@ -1,0 +1,10 @@
+{
+  "name": "commiq-markets",
+  "private": true,
+  "scripts": {
+    "dev:server": "pnpm --filter @commiq-markets/server dev",
+    "dev:ui": "pnpm --filter @commiq-markets/ui dev",
+    "dev": "pnpm run dev:server & pnpm run dev:ui",
+    "build": "pnpm --filter @commiq-markets/shared build && pnpm --filter @commiq-markets/server build && pnpm --filter @commiq-markets/ui build"
+  }
+}

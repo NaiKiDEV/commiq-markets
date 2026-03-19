@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:naikidev.github.io)",
+      "Bash(pnpm install:*)",
+      "Bash(find C:/repos/commiq-markets/node_modules/.pnpm -path *@naikidev+commiq@1.1.0* -name *.d.ts)",
+      "Bash(find C:/repos/commiq-markets/node_modules/.pnpm/@naikidev+commiq@1.1.0 -name *.d.ts)",
+      "Bash(find C:/repos/commiq-markets/node_modules/.pnpm -path *commiq-otel* -name *.d.ts)",
+      "Bash(pnpm view:*)",
+      "Bash(pnpm --filter @commiq-markets/ui build)"
+    ]
+  }
+}
