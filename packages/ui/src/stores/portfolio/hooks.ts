@@ -1,4 +1,5 @@
 import { useSelector } from '@naikidev/commiq-react';
+import type { TradingPair } from '@commiq-markets/shared';
 import { portfolioStore } from './store.js';
 
 export function usePortfolio() {
@@ -12,4 +13,16 @@ export function usePortfolio() {
     cashBalance,
     totalValue,
   };
+}
+
+export function useCashBalance() {
+  return useSelector(portfolioStore, (s) => s.cashBalance);
+}
+
+export function useTotalValue() {
+  return useSelector(portfolioStore, (s) => s.totalValue);
+}
+
+export function useHolding(pair: TradingPair) {
+  return useSelector(portfolioStore, (s) => s.holdings[pair] ?? null);
 }

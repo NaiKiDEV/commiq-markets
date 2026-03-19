@@ -12,3 +12,7 @@ export function useChartPair() {
 export function useChartStatus() {
   return useSelector(chartStore, (s) => s.status);
 }
+
+export function useChartInterval() {
+  return useSelector(chartStore, (s) => s.interval);
+}

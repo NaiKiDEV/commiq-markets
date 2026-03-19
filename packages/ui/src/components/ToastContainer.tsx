@@ -6,9 +6,9 @@ import { UiCommand } from '../stores/ui/commands.js';
 import { useToasts } from '../stores/ui/hooks.js';
 
 const typeStyles: Record<string, string> = {
-  success: 'border-accent-green/30 bg-accent-green/10',
-  error: 'border-accent-red/30 bg-accent-red/10',
-  info: 'border-accent-blue/30 bg-accent-blue/10',
+  success: 'bg-accent-green/10 text-accent-green',
+  error: 'bg-accent-red/10 text-accent-red',
+  info: 'bg-accent-blue/10 text-accent-blue',
 };
 
 export function ToastContainer() {
@@ -28,26 +28,26 @@ export function ToastContainer() {
     }, 300);
   }, [queue]);
 
-  // Auto-dismiss toasts after 4 seconds — uses useEvent to react to new toasts
+  // Auto-dismiss toasts after 4 seconds
   useEvent(uiStore, UiEvent.ToastAdded, (event) => {
     const { id } = event.data;
     setTimeout(() => dismissToast(id), 4000);
   });
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm">
+    <div className="fixed bottom-3 right-3 z-50 flex flex-col gap-1.5 max-w-xs">
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`border rounded-lg px-4 py-3 text-sm shadow-lg ${
+          className={`rounded px-3 py-2 text-[11px] font-medium shadow-xl backdrop-blur-sm ${
             dismissingIds.has(toast.id) ? 'animate-fade-out' : 'animate-slide-in'
           } ${typeStyles[toast.type] ?? typeStyles.info}`}
         >
-          <div className="flex items-center justify-between gap-3">
-            <span>{toast.message}</span>
+          <div className="flex items-center justify-between gap-2">
+            <span className="font-mono">{toast.message}</span>
             <button
               onClick={() => dismissToast(toast.id)}
-              className="text-gray-500 hover:text-gray-300 text-xs"
+              className="opacity-50 hover:opacity-100 text-xs shrink-0"
             >
               &times;
             </button>

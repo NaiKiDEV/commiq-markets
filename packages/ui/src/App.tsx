@@ -1,22 +1,22 @@
-import { CommiqProvider } from '@naikidev/commiq-react';
-import { CommiqDevtools } from '@naikidev/commiq-devtools';
-import { marketStore } from './stores/market/store.js';
-import { chartStore } from './stores/chart/store.js';
-import { orderStore } from './stores/order/store.js';
-import { portfolioStore } from './stores/portfolio/store.js';
-import { uiStore } from './stores/ui/store.js';
-import { orderbookStore } from './stores/orderbook/store.js';
-import { searchStore } from './stores/search/store.js';
-import { Layout } from './components/Layout.js';
-import { MarketOverview } from './components/MarketOverview.js';
-import { PriceChart } from './components/PriceChart.js';
-import { OrderBook } from './components/OrderBook.js';
-import { OrderPanel } from './components/OrderPanel.js';
-import { OrderHistory } from './components/OrderHistory.js';
-import { Portfolio } from './components/Portfolio.js';
-import { ToastContainer } from './components/ToastContainer.js';
-import { ErrorBoundary } from './components/ErrorBoundary.js';
-import { PanelError } from './components/PanelError.js';
+import { CommiqProvider } from "@naikidev/commiq-react";
+import { CommiqDevtools } from "@naikidev/commiq-devtools";
+import { marketStore } from "./stores/market/store.js";
+import { chartStore } from "./stores/chart/store.js";
+import { orderStore } from "./stores/order/store.js";
+import { portfolioStore } from "./stores/portfolio/store.js";
+import { uiStore } from "./stores/ui/store.js";
+import { orderbookStore } from "./stores/orderbook/store.js";
+import { searchStore } from "./stores/search/store.js";
+import { Layout } from "./components/Layout.js";
+import { MarketOverview } from "./components/MarketOverview.js";
+import { PriceChart } from "./components/PriceChart.js";
+import { OrderBook } from "./components/OrderBook.js";
+import { OrderPanel } from "./components/OrderPanel.js";
+import { BottomPanel } from "./components/BottomPanel.js";
+import { ActivityFeed } from "./components/ActivityFeed.js";
+import { ToastContainer } from "./components/ToastContainer.js";
+import { ErrorBoundary } from "./components/ErrorBoundary.js";
+import { PanelError } from "./components/PanelError.js";
 
 const stores = {
   market: marketStore,
@@ -28,45 +28,71 @@ const stores = {
   search: searchStore,
 };
 
+// Stable fallback references — prevents ErrorBoundary re-renders from new function refs
+const marketsFallback = (_err: Error, retry: () => void) => (
+  <PanelError name="Markets" onRetry={retry} />
+);
+const chartFallback = (_err: Error, retry: () => void) => (
+  <PanelError name="Price Chart" onRetry={retry} />
+);
+const orderbookFallback = (_err: Error, retry: () => void) => (
+  <PanelError name="Order Book" onRetry={retry} />
+);
+const orderPanelFallback = (_err: Error, retry: () => void) => (
+  <PanelError name="Order Panel" onRetry={retry} />
+);
+const bottomFallback = (_err: Error, retry: () => void) => (
+  <PanelError name="Orders & Portfolio" onRetry={retry} />
+);
+
 export function App() {
   return (
-    <CommiqProvider stores={stores}>
+    <>
       <Layout>
-        {/* Market tickers across the top */}
-        <ErrorBoundary fallback={(err, retry) => <PanelError name="Market Overview" onRetry={retry} />}>
-          <MarketOverview />
-        </ErrorBoundary>
+        {/* Ticker strip */}
+        <div className="shrink-0">
+          <ErrorBoundary fallback={marketsFallback}>
+            <MarketOverview />
+          </ErrorBoundary>
+        </div>
 
-        {/* Main grid: chart + right sidebar */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mt-4">
-          <div className="lg:col-span-3">
-            <ErrorBoundary fallback={(err, retry) => <PanelError name="Price Chart" onRetry={retry} />}>
+        {/* Main area: chart + right sidebar */}
+        <div className="flex-1 min-h-0 flex gap-1">
+          {/* Chart (fills remaining width) */}
+          <div className="flex-1 min-w-0">
+            <ErrorBoundary fallback={chartFallback}>
               <PriceChart />
             </ErrorBoundary>
           </div>
-          <div className="space-y-4">
-            <ErrorBoundary fallback={(err, retry) => <PanelError name="Order Book" onRetry={retry} />}>
-              <OrderBook />
-            </ErrorBoundary>
-            <ErrorBoundary fallback={(err, retry) => <PanelError name="Order Panel" onRetry={retry} />}>
-              <OrderPanel />
-            </ErrorBoundary>
+
+          {/* Right sidebar: orderbook + order panel */}
+          <div className="w-72 shrink-0 flex flex-col gap-1">
+            <div className="flex-1 min-h-0">
+              <ErrorBoundary fallback={orderbookFallback}>
+                <OrderBook />
+              </ErrorBoundary>
+            </div>
+            <div className="shrink-0">
+              <ErrorBoundary fallback={orderPanelFallback}>
+                <OrderPanel />
+              </ErrorBoundary>
+            </div>
           </div>
         </div>
 
-        {/* Bottom row: orders + portfolio */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
-          <ErrorBoundary fallback={(err, retry) => <PanelError name="Order History" onRetry={retry} />}>
-            <OrderHistory />
-          </ErrorBoundary>
-          <ErrorBoundary fallback={(err, retry) => <PanelError name="Portfolio" onRetry={retry} />}>
-            <Portfolio />
-          </ErrorBoundary>
+        {/* Bottom: tabbed orders/portfolio + activity feed */}
+        <div className="shrink-0 h-40 flex gap-1">
+          <div className="flex-1 min-w-0">
+            <BottomPanel />
+          </div>
+          <div className="w-72 shrink-0">
+            <ActivityFeed />
+          </div>
         </div>
       </Layout>
 
       <ToastContainer />
       <CommiqDevtools stores={stores} />
-    </CommiqProvider>
+    </>
   );
 }

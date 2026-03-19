@@ -7,26 +7,26 @@ export function MarketOverview() {
   const setQuery = useSetSearchQuery();
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between px-1">
-        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Markets</h2>
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search pairs..."
-          className="bg-surface rounded px-3 py-1 text-xs text-white placeholder-gray-600
-                     outline-none focus:ring-1 focus:ring-accent-blue w-40"
-        />
-      </div>
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+    <div className="flex items-center gap-1.5 bg-surface-card rounded px-2 py-1">
+      <span className="text-[10px] font-medium uppercase tracking-wider text-gray-500 shrink-0 mr-1">
+        Markets
+      </span>
+      <div className="flex-1 flex items-center gap-1 overflow-x-auto min-w-0">
         {matchedPairs.map((pair) => (
           <PriceTile key={pair} pair={pair} />
         ))}
         {matchedPairs.length === 0 && (
-          <p className="text-xs text-gray-600 col-span-full text-center py-4">No pairs match your search</p>
+          <span className="text-[10px] text-gray-500 px-2">No pairs match</span>
         )}
       </div>
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search..."
+        className="bg-surface rounded px-2 py-0.5 text-[11px] text-white placeholder-gray-600
+                   outline-none focus:ring-1 focus:ring-accent-blue/40 w-24 shrink-0 font-mono"
+      />
     </div>
   );
 }

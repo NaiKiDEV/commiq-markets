@@ -19,19 +19,17 @@ export function ReconnectBanner() {
   if (!reconnecting) return null;
 
   return (
-    <div className="bg-yellow-900/30 border-b border-yellow-700/40 px-4 py-2">
-      <div className="max-w-7xl mx-auto flex items-center justify-center gap-3 text-sm">
-        <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
-        <span className="text-yellow-300">
-          Connection lost — reconnecting
+    <div className="shrink-0 bg-accent-yellow/15 rounded px-3 py-1.5">
+      <div className="flex items-center justify-center gap-2 text-[11px]">
+        <span className="w-1.5 h-1.5 rounded-full bg-accent-yellow animate-pulse" />
+        <span className="text-accent-yellow font-medium">
+          Reconnecting
           {reconnecting.attempt > 1 && (
-            <span className="text-yellow-500"> (attempt {reconnecting.attempt})</span>
+            <span className="text-accent-yellow/70 font-mono"> #{reconnecting.attempt}</span>
           )}
         </span>
         {countdown > 0 && (
-          <span className="font-mono text-yellow-500 text-xs">
-            {countdown}s
-          </span>
+          <span className="font-mono text-accent-yellow/70">{countdown}s</span>
         )}
       </div>
     </div>

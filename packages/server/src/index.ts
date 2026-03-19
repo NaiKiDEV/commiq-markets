@@ -31,11 +31,11 @@ market.onTick((ticker) => {
   }
 });
 
-// Forward candle updates to subscribed clients
-candles.onCandle((pair, candle) => {
+// Forward candle updates to subscribed clients, filtered by interval
+candles.onCandle((pair, candle, interval) => {
   for (const session of sessions) {
-    if (session.subscribedPair === pair) {
-      session.send({ type: 'candle:update', pair, candle });
+    if (session.subscribedPair === pair && session.subscribedInterval === interval) {
+      session.send({ type: 'candle:update', pair, candle, interval });
     }
   }
 });

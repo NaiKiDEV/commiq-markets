@@ -27,5 +27,22 @@ export const VOLATILITY: Record<TradingPair, number> = {
   'XRP/USD': 0.004,
 };
 
+/** Price display precision per pair — { decimals, minMove } */
+export const PRICE_PRECISION: Record<TradingPair, { precision: number; minMove: number }> = {
+  'BTC/USD': { precision: 2, minMove: 0.01 },
+  'ETH/USD': { precision: 2, minMove: 0.01 },
+  'SOL/USD': { precision: 3, minMove: 0.001 },
+  'DOGE/USD': { precision: 5, minMove: 0.00001 },
+  'ADA/USD': { precision: 4, minMove: 0.0001 },
+  'XRP/USD': { precision: 4, minMove: 0.0001 },
+};
+
 export const WS_PORT = 4200;
 export const STARTING_CASH = 100_000;
+
+export const CANDLE_INTERVAL_MS: Record<import('./types.js').CandleInterval, number> = {
+  '1m': 60_000,
+  '5m': 300_000,
+  '15m': 900_000,
+  '1h': 3_600_000,
+};

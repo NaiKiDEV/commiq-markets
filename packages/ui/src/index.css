@@ -2,16 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1a1f2e transparent;
 }
 
 @keyframes flash-green {
-  0% { color: #22c55e; background-color: rgba(34,197,94,0.15); }
+  0% { color: #22c55e; background-color: rgba(34,197,94,0.12); }
   100% { color: inherit; background-color: transparent; }
 }
 @keyframes flash-red {
-  0% { color: #ef4444; background-color: rgba(239,68,68,0.15); }
+  0% { color: #ef4444; background-color: rgba(239,68,68,0.12); }
   100% { color: inherit; background-color: transparent; }
 }
 @keyframes slide-in-right {
@@ -31,3 +32,8 @@ body {
 .animate-slide-in { animation: slide-in-right 300ms ease-out; }
 .animate-fade-out { animation: fade-out 300ms ease-out forwards; }
 .animate-slide-down { animation: slide-down 200ms ease-out; }
+@keyframes slide-in-top {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.animate-slide-in-top { animation: slide-in-top 180ms ease-out; }

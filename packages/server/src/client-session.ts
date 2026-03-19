@@ -1,5 +1,5 @@
 import type WebSocket from 'ws';
-import type { ClientMessage, ServerMessage, TradingPair } from '@commiq-markets/shared';
+import type { CandleInterval, ClientMessage, ServerMessage, TradingPair } from '@commiq-markets/shared';
 import type { MarketEngine } from './market-engine.js';
 import type { CandleGenerator } from './candle-generator.js';
 import type { OrderEngine } from './order-engine.js';
@@ -7,6 +7,7 @@ import type { OrderBookEngine } from './orderbook-engine.js';
 
 export class ClientSession {
   subscribedPair: TradingPair = 'BTC/USD';
+  subscribedInterval: CandleInterval = '1m';
   subscribedOrderbookPair: TradingPair | null = null;
 
   constructor(
@@ -34,9 +35,16 @@ export class ClientSession {
     switch (msg.type) {
       case 'subscribe:pair':
         this.subscribedPair = msg.pair;
-        // Send historical candles for the new pair
-        const history = this.candles.generateHistory(msg.pair, 100);
-        this.send({ type: 'snapshot', tickers: this.market.getAllTickers(), candles: history, pair: msg.pair });
+        if (msg.interval) this.subscribedInterval = msg.interval;
+        // Send historical candles for the new pair at requested interval
+        const history = this.candles.generateHistory(msg.pair, 100, this.subscribedInterval);
+        this.send({
+          type: 'snapshot',
+          tickers: this.market.getAllTickers(),
+          candles: history,
+          pair: msg.pair,
+          interval: this.subscribedInterval,
+        });
         break;
 
       case 'order:place':
@@ -69,7 +77,13 @@ export class ClientSession {
 
   sendSnapshot() {
     const tickers = this.market.getAllTickers();
-    const candles = this.candles.generateHistory(this.subscribedPair, 100);
-    this.send({ type: 'snapshot', tickers, candles, pair: this.subscribedPair });
+    const candles = this.candles.generateHistory(this.subscribedPair, 100, this.subscribedInterval);
+    this.send({
+      type: 'snapshot',
+      tickers,
+      candles,
+      pair: this.subscribedPair,
+      interval: this.subscribedInterval,
+    });
   }
 }

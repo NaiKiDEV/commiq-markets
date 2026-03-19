@@ -1,5 +1,5 @@
 import { createEvent } from '@naikidev/commiq';
-import type { OhlcCandle, Order, Ticker, TradingPair } from '@commiq-markets/shared';
+import type { CandleInterval, OhlcCandle, Order, Ticker, TradingPair } from '@commiq-markets/shared';
 
 // Market domain events
 export const MarketEvent = {
@@ -11,6 +11,7 @@ export const MarketEvent = {
 export const ChartEvent = {
   PairSwitched: createEvent<{ pair: TradingPair }>('chart:pairSwitched'),
   CandleReceived: createEvent<{ candle: OhlcCandle }>('chart:candleReceived'),
+  IntervalChanged: createEvent<{ interval: CandleInterval }>('chart:intervalChanged'),
 };
 
 // Order domain events
