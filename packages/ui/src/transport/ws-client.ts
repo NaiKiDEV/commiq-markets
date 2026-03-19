@@ -4,12 +4,14 @@ export type WsClientCallbacks = {
   onMessage: (msg: ServerMessage) => void;
   onConnect: () => void;
   onDisconnect: () => void;
+  onReconnecting?: (attempt: number, delayMs: number) => void;
 };
 
 export class WsClient {
   private ws: WebSocket | null = null;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
   private reconnectDelay = 1000;
+  private reconnectAttempt = 0;
 
   constructor(
     private url: string,
@@ -21,6 +23,7 @@ export class WsClient {
 
     this.ws.onopen = () => {
       this.reconnectDelay = 1000;
+      this.reconnectAttempt = 0;
       this.callbacks.onConnect();
     };
 
@@ -63,6 +66,8 @@ export class WsClient {
   }
 
   private scheduleReconnect() {
+    this.reconnectAttempt++;
+    this.callbacks.onReconnecting?.(this.reconnectAttempt, this.reconnectDelay);
     this.reconnectTimer = setTimeout(() => {
       this.reconnectDelay = Math.min(this.reconnectDelay * 2, 10000);
       this.connect();

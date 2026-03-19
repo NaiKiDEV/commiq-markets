@@ -5,10 +5,12 @@ import { marketStore } from '../stores/market/store.js';
 import { chartStore } from '../stores/chart/store.js';
 import { orderStore } from '../stores/order/store.js';
 import { orderbookStore } from '../stores/orderbook/store.js';
+import { uiStore } from '../stores/ui/store.js';
 import { MarketCommand } from '../stores/market/commands.js';
 import { ChartCommand } from '../stores/chart/commands.js';
 import { OrderCommand } from '../stores/order/commands.js';
 import { OrderBookCommand } from '../stores/orderbook/commands.js';
+import { UiCommand } from '../stores/ui/commands.js';
 import { ChartEvent } from '../stores/events.js';
 
 // Bridge: inbound WS messages become commiq commands
@@ -58,9 +60,13 @@ export function initTransport(url: string) {
     onMessage: handleServerMessage,
     onConnect: () => {
       marketStore.queue(MarketCommand.setConnected(true));
+      uiStore.queue(UiCommand.clearReconnecting());
     },
     onDisconnect: () => {
       marketStore.queue(MarketCommand.setConnected(false));
+    },
+    onReconnecting: (attempt, delayMs) => {
+      uiStore.queue(UiCommand.setReconnecting(attempt, delayMs));
     },
   });
 

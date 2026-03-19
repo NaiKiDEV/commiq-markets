@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { ConnectionStatus } from './ConnectionStatus.js';
+import { ReconnectBanner } from './ReconnectBanner.js';
 
 export function Layout({ children }: { children: ReactNode }) {
   return (
@@ -18,6 +19,8 @@ export function Layout({ children }: { children: ReactNode }) {
           <ConnectionStatus />
         </div>
       </header>
+
+      <ReconnectBanner />
 
       {/* Main content */}
       <main className="flex-1 max-w-7xl mx-auto w-full p-4">

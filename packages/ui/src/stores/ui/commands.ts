@@ -10,4 +10,10 @@ export const UiCommand = {
 
   removeToast: (id: string) =>
     createCommand('ui:removeToast', { id }),
+
+  setReconnecting: (attempt: number, nextRetryMs: number) =>
+    createCommand('ui:setReconnecting', { attempt, nextRetryMs }),
+
+  clearReconnecting: () =>
+    createCommand('ui:clearReconnecting', {}),
 };

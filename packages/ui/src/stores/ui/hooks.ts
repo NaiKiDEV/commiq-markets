@@ -15,3 +15,7 @@ export function useSelectPair() {
 export function useToasts() {
   return useSelector(uiStore, (s) => s.toasts);
 }
+
+export function useReconnecting() {
+  return useSelector(uiStore, (s) => s.reconnecting);
+}

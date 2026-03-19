@@ -37,6 +37,8 @@ export type Order = {
   filledPrice: number | null;
 };
 
+export type CandleInterval = '1m' | '5m' | '15m' | '1h';
+
 export type OrderBookLevel = {
   price: number;
   quantity: number;

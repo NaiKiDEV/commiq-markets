@@ -15,6 +15,8 @@ import { OrderPanel } from './components/OrderPanel.js';
 import { OrderHistory } from './components/OrderHistory.js';
 import { Portfolio } from './components/Portfolio.js';
 import { ToastContainer } from './components/ToastContainer.js';
+import { ErrorBoundary } from './components/ErrorBoundary.js';
+import { PanelError } from './components/PanelError.js';
 
 const stores = {
   market: marketStore,
@@ -31,23 +33,35 @@ export function App() {
     <CommiqProvider stores={stores}>
       <Layout>
         {/* Market tickers across the top */}
-        <MarketOverview />
+        <ErrorBoundary fallback={(err, retry) => <PanelError name="Market Overview" onRetry={retry} />}>
+          <MarketOverview />
+        </ErrorBoundary>
 
         {/* Main grid: chart + right sidebar */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mt-4">
           <div className="lg:col-span-3">
-            <PriceChart />
+            <ErrorBoundary fallback={(err, retry) => <PanelError name="Price Chart" onRetry={retry} />}>
+              <PriceChart />
+            </ErrorBoundary>
           </div>
           <div className="space-y-4">
-            <OrderBook />
-            <OrderPanel />
+            <ErrorBoundary fallback={(err, retry) => <PanelError name="Order Book" onRetry={retry} />}>
+              <OrderBook />
+            </ErrorBoundary>
+            <ErrorBoundary fallback={(err, retry) => <PanelError name="Order Panel" onRetry={retry} />}>
+              <OrderPanel />
+            </ErrorBoundary>
           </div>
         </div>
 
         {/* Bottom row: orders + portfolio */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
-          <OrderHistory />
-          <Portfolio />
+          <ErrorBoundary fallback={(err, retry) => <PanelError name="Order History" onRetry={retry} />}>
+            <OrderHistory />
+          </ErrorBoundary>
+          <ErrorBoundary fallback={(err, retry) => <PanelError name="Portfolio" onRetry={retry} />}>
+            <Portfolio />
+          </ErrorBoundary>
         </div>
       </Layout>
 

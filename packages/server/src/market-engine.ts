@@ -4,7 +4,7 @@ import {
   VOLATILITY,
   type Ticker,
   type TradingPair,
-} from '@commiq-markets/shared';
+} from "@commiq-markets/shared";
 
 type TickerState = {
   price: number;
@@ -33,19 +33,22 @@ export class MarketEngine {
   }
 
   start() {
-    this.interval = setInterval(() => {
-      // Update 1-3 random pairs each tick
-      const count = Math.floor(Math.random() * 3) + 1;
-      const shuffled = [...TRADING_PAIRS].sort(() => Math.random() - 0.5);
+    this.interval = setInterval(
+      () => {
+        // Update 1-3 random pairs each tick
+        const count = Math.floor(Math.random() * 3) + 1;
+        const shuffled = [...TRADING_PAIRS].sort(() => Math.random() - 0.5);
 
-      for (let i = 0; i < count; i++) {
-        const pair = shuffled[i];
-        const ticker = this.tick(pair);
-        for (const listener of this.listeners) {
-          listener(ticker);
+        for (let i = 0; i < count; i++) {
+          const pair = shuffled[i];
+          const ticker = this.tick(pair);
+          for (const listener of this.listeners) {
+            listener(ticker);
+          }
         }
-      }
-    }, 500 + Math.random() * 1000);
+      },
+      200 + Math.random() * 300,
+    );
   }
 
   stop() {
@@ -74,7 +77,7 @@ export class MarketEngine {
 
     // Random walk with mean-reversion toward base price
     const base = BASE_PRICES[pair];
-    const meanReversion = (base - s.price) / base * 0.01;
+    const meanReversion = ((base - s.price) / base) * 0.01;
     const noise = (Math.random() - 0.5) * 2 * vol;
     const change = s.price * (noise + meanReversion);
 

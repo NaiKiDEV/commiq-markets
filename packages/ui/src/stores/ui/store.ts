@@ -10,14 +10,22 @@ export type Toast = {
   timestamp: number;
 };
 
+export type ReconnectInfo = {
+  active: boolean;
+  attempt: number;
+  nextRetryMs: number;
+};
+
 export type UiState = {
   selectedPair: TradingPair;
   toasts: Toast[];
+  reconnecting: ReconnectInfo | null;
 };
 
 const _store = createStore<UiState>({
   selectedPair: 'BTC/USD',
   toasts: [],
+  reconnecting: null,
 })
   .useExtension(withPatch<UiState>());
 
@@ -41,6 +49,15 @@ _store.addCommandHandler<{ message: string; type: Toast['type'] }>('ui:addToast'
 
 _store.addCommandHandler<{ id: string }>('ui:removeToast', (ctx, cmd) => {
   ctx.patch({ toasts: ctx.state.toasts.filter((t) => t.id !== cmd.data.id) });
+});
+
+// Reconnection state
+_store.addCommandHandler<{ attempt: number; nextRetryMs: number }>('ui:setReconnecting', (ctx, cmd) => {
+  ctx.patch({ reconnecting: { active: true, attempt: cmd.data.attempt, nextRetryMs: cmd.data.nextRetryMs } });
+});
+
+_store.addCommandHandler('ui:clearReconnecting', (ctx) => {
+  ctx.patch({ reconnecting: null });
 });
 
 export const uiStore = sealStore(_store);
